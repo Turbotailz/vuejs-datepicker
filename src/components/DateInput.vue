@@ -11,7 +11,7 @@
     </span>
     <!-- Input -->
     <input
-      v-autofocus
+      v-autofocus="autofocus"
       :type="inline ? 'hidden' : 'text'"
       :class="computedInputClass"
       :name="name"
@@ -64,7 +64,8 @@ export default {
     required: Boolean,
     typeable: Boolean,
     bootstrapStyling: Boolean,
-    useUtc: Boolean
+    useUtc: Boolean,
+    autofocus: Boolean
   },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
