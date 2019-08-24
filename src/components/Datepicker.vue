@@ -22,6 +22,7 @@
       :required="required"
       :bootstrapStyling="bootstrapStyling"
       :use-utc="useUtc"
+      :autofocus="autofocus"
       @showCalendar="showCalendar"
       @closeCalendar="close(true)"
       @typedDate="setTypedDate"
@@ -153,6 +154,10 @@ export default {
     maximumView: {
       type: String,
       default: 'year'
+    },
+    autofocus: {
+      type: Boolean,
+      default: 'false'
     }
   },
   data () {
