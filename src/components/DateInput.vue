@@ -11,6 +11,7 @@
     </span>
     <!-- Input -->
     <input
+      v-autofocus
       :type="inline ? 'hidden' : 'text'"
       :class="computedInputClass"
       :name="name"
@@ -23,6 +24,7 @@
       :disabled="disabled"
       :required="required"
       :readonly="!typeable"
+      @focus="showCalendar"
       @click="showCalendar"
       @keyup="parseTypedDate"
       @blur="inputBlurred"
