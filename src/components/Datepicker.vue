@@ -30,6 +30,20 @@
       <slot name="afterDateInput" slot="afterDateInput"></slot>
     </date-input>
 
+    <picker-time  
+      v-if="allowedToShowView('time')"
+      :showTimeView="showTimeView"
+      :allowedToShowView="allowedToShowView"
+      :format="format"
+      :selectedDate="selectedDate"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :use-utc="useUtc"
+      @selectDate="selectDate"
+      @showDayCalendar="showDayCalendar">
+      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+    </picker-time>
 
     <!-- Day View -->
     <picker-day
@@ -49,8 +63,10 @@
       :mondayFirst="mondayFirst"
       :dayCellContent="dayCellContent"
       :use-utc="useUtc"
+      :time="time"
       @changedMonth="handleChangedMonthFromDayPicker"
       @selectDate="selectDate"
+      @showTimeCalendar="showTimeCalendar"
       @showMonthCalendar="showMonthCalendar"
       @selectedDisabled="selectDisabledDate">
       <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
@@ -97,6 +113,7 @@
 <script>
 import en from '../locale/translations/en'
 import DateInput from './DateInput.vue'
+import PickerTime from './PickerTime.vue'
 import PickerDay from './PickerDay.vue'
 import PickerMonth from './PickerMonth.vue'
 import PickerYear from './PickerYear.vue'
@@ -104,6 +121,7 @@ import utils, { makeDateUtils } from '../utils/DateUtils'
 export default {
   components: {
     DateInput,
+    PickerTime,
     PickerDay,
     PickerMonth,
     PickerYear
@@ -147,6 +165,7 @@ export default {
     required: Boolean,
     typeable: Boolean,
     useUtc: Boolean,
+    time: Boolean,
     minimumView: {
       type: String,
       default: 'day'
@@ -180,6 +199,7 @@ export default {
        * Flags to show calendar views
        * {Boolean}
        */
+      showTimeView: false,
       showDayView: false,
       showMonthView: false,
       showYearView: false,
@@ -224,7 +244,7 @@ export default {
       }
     },
     isOpen () {
-      return this.showDayView || this.showMonthView || this.showYearView
+      return this.showTimeView || this.showDayView || this.showMonthView || this.showYearView
     },
     isInline () {
       return !!this.inline
@@ -289,7 +309,23 @@ export default {
       const maximumViewIndex = views.indexOf(this.maximumView)
       const viewIndex = views.indexOf(view)
 
+      if (view === 'time') {
+        return this.time && Boolean(this.selectedDate)
+      }
+
       return viewIndex >= minimumViewIndex && viewIndex <= maximumViewIndex
+    },
+    /**
+     * Show the time picker
+     * @return {Boolean}
+     */
+    showTimeCalendar () {
+      if (!this.allowedToShowView('time')) {
+        return false
+      }
+      this.close()
+      this.showTimeView = true
+      return true
     },
     /**
      * Show the day picker
@@ -353,7 +389,7 @@ export default {
      */
     selectDate (date) {
       this.setDate(date.timestamp)
-      if (!this.isInline) {
+      if (!this.isInline && !this.time) {
         this.close(true)
       }
       this.resetTypedDate = new Date()
@@ -418,6 +454,7 @@ export default {
           date = new Date()
         }
       }
+
       this.pageTimestamp = this.utils.setDate(new Date(date), 1)
     },
     /**
@@ -438,7 +475,7 @@ export default {
      * @param {Boolean} emitEvent - emit close event
      */
     close (emitEvent) {
-      this.showDayView = this.showMonthView = this.showYearView = false
+      this.showTimeView = this.showDayView = this.showMonthView = this.showYearView = false
       if (!this.isInline) {
         if (emitEvent) {
           this.$emit('closed')
