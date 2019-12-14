@@ -5,6 +5,7 @@ import babel from 'rollup-plugin-babel'
 import postcss from 'rollup-plugin-postcss'
 import autoprefixer from 'autoprefixer'
 import commonjs from 'rollup-plugin-commonjs'
+import resolve from 'rollup-plugin-node-resolve'
 
 export default [{
   input: path.join(__dirname, '..', 'src', 'components', 'Datepicker.vue'),
@@ -27,20 +28,26 @@ export default [{
     vue({css: true}),
     postcss({plugins: [autoprefixer()]}),
     commonjs(),
-    babel({exclude: 'node_modules/**'})
+    babel({exclude: 'node_modules/**'}),
+    resolve({
+      mainFields: ['module', 'main']
+    })
   ]
 }, {
   input: path.join(__dirname, '..', 'src', 'components', 'Datepicker.vue'),
   output: {
     file: 'dist/vuejs-datepicker.min.js',
     format: 'umd',
-    name: 'vuejsDatepicker'
+    name: 'vuejsDatepicker',
   },
   plugins: [
     vue({css: true}),
     postcss({plugins: [autoprefixer()]}),
     commonjs(),
     terser(),
-    babel({exclude: 'node_modules/**'})
+    babel({exclude: 'node_modules/**'}),
+    resolve({
+      mainFields: ['module', 'main']
+    })
   ]
 }]

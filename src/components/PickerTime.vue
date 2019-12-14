@@ -2,7 +2,7 @@
   <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showTimeView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header>
-        <div class="day__calendar_btn" @click="showDayCalendar" :class="allowedToShowView('day') ? 'up' : ''">{{ formattedValue }}</div>
+        <div class="day__calendar_btn" @click="showDayCalendar" :class="allowedToShowView('day') ? 'up' : ''">{{ formatted }}</div>
     </header>
         <span class="cell time time_up" @click="setHours(1)">up</span><span class="cell"> </span><span class="cell time time_up" @click="setMinutes(1)">up</span>
         <span class="cell time">{{utils.getHours(selectedDate)}}</span><span class="cell">:</span><span class="cell time">{{utils.getMinutes(selectedDate)}}</span>
@@ -11,6 +11,7 @@
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import format from 'date-fns/format'
 export default {
   props: {
     showTimeView: Boolean,
@@ -36,6 +37,10 @@ export default {
       return typeof this.format === 'function'
         ? this.format(this.selectedDate)
         : this.utils.formatDate(new Date(this.selectedDate), this.format, this.translation)
+    },
+
+    formatted () {
+      return format(this.selectedDate, this.format)
     }
   },
   methods: {

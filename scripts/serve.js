@@ -17,7 +17,8 @@ export default {
   },
   plugins: [
     vue({
-      css: true
+      css: true,
+      needMap: false
     }),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')

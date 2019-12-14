@@ -30,7 +30,7 @@
       <slot name="afterDateInput" slot="afterDateInput"></slot>
     </date-input>
 
-    <picker-time  
+    <picker-time
       v-if="allowedToShowView('time')"
       :showTimeView="showTimeView"
       :allowedToShowView="allowedToShowView"
@@ -274,7 +274,7 @@ export default {
         return false
       }
       if (this.isOpen) {
-        return this.close(true)
+        // return this.close(true)
       }
       this.setInitialView()
     },

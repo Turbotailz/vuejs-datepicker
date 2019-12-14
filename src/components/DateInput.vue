@@ -17,7 +17,7 @@
       :name="name"
       :ref="refName"
       :id="id"
-      :value="formattedValue"
+      :value="formatted"
       :open-date="openDate"
       :placeholder="placeholder"
       :clear-button="clearButton"
@@ -42,6 +42,8 @@
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import format from 'date-fns/format'
+
 export default {
   props: {
     selectedDate: Date,
@@ -86,6 +88,14 @@ export default {
       return typeof this.format === 'function'
         ? this.format(this.selectedDate)
         : this.utils.formatDate(new Date(this.selectedDate), this.format, this.translation)
+    },
+
+    formatted () {
+      if (!this.selectedDate) return null
+
+      if (this.typedDate) return this.typedDate
+
+      return format(this.selectedDate, this.format)
     },
 
     computedInputClass () {
